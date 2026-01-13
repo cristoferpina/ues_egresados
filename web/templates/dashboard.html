@@ -1,0 +1,189 @@
+{{define "content"}}
+<!-- Welcome Section -->
+<section class="mb-8 animate-fade-in-up">
+    <div class="flex flex-col gap-2">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-text-main dark:text-white tracking-tight">
+    Bienvenido, {{.NombreCompleto}}
+</h2>
+        <p class="text-text-secondary dark:text-gray-400 text-lg">
+            Resumen de la actividad académica y profesional de la universidad.
+        </p>
+    </div>
+</section>
+
+<!-- Stats Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <!-- Stat Card 1 -->
+    <div class="group bg-white dark:bg-[#2a1a1e] rounded-xl p-6 border border-card-border dark:border-[#3a252a] shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(139,35,62,0.12)] hover:border-primary/30 transition-all duration-300">
+        <div class="flex items-start justify-between mb-4">
+            <div class="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                <span class="material-symbols-outlined text-2xl">groups</span>
+            </div>
+        </div>
+        <div>
+            <p class="text-text-secondary dark:text-gray-400 text-sm font-medium mb-1">Total Egresados</p>
+            <h3 id="totalEgresados" class="text-3xl font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">0</h3>
+        </div>
+    </div>
+
+    <!-- Stat Card 2 -->
+    <div class="group bg-white dark:bg-[#2a1a1e] rounded-xl p-6 border border-card-border dark:border-[#3a252a] shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(139,35,62,0.12)] hover:border-primary/30 transition-all duration-300">
+        <div class="flex items-start justify-between mb-4">
+            <div class="p-3 rounded-lg bg-primary/10 text-primary dark:text-primary-400">
+                <span class="material-symbols-outlined text-2xl">school</span>
+            </div>
+        </div>
+        <div>
+            <p class="text-text-secondary dark:text-gray-400 text-sm font-medium mb-1">Titulados</p>
+            <h3 id="totalTitulados" class="text-3xl font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">0</h3>
+        </div>
+    </div>
+
+    <!-- Stat Card 3 -->
+    <div class="group bg-white dark:bg-[#2a1a1e] rounded-xl p-6 border border-card-border dark:border-[#3a252a] shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(139,35,62,0.12)] hover:border-primary/30 transition-all duration-300">
+        <div class="flex items-start justify-between mb-4">
+            <div class="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400">
+                <span class="material-symbols-outlined text-2xl">auto_stories</span>
+            </div>
+        </div>
+        <div>
+            <p class="text-text-secondary dark:text-gray-400 text-sm font-medium mb-1">Carreras</p>
+            <h3 id="totalCarreras" class="text-3xl font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">3</h3>
+        </div>
+    </div>
+
+    <!-- Stat Card 4 -->
+    <div class="group bg-white dark:bg-[#2a1a1e] rounded-xl p-6 border border-card-border dark:border-[#3a252a] shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(139,35,62,0.12)] hover:border-primary/30 transition-all duration-300">
+        <div class="flex items-start justify-between mb-4">
+            <div class="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
+                <span class="material-symbols-outlined text-2xl">history_edu</span>
+            </div>
+        </div>
+        <div>
+            <p class="text-text-secondary dark:text-gray-400 text-sm font-medium mb-1">Generaciones</p>
+            <h3 id="totalGeneraciones" class="text-3xl font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">15</h3>
+        </div>
+    </div>
+</section>
+
+<!-- Charts Section -->
+<section class="mb-10">
+    <h3 class="text-xl font-bold text-text-main dark:text-white mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">analytics</span>
+        Estadísticas y Análisis
+    </h3>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Chart: Egresados por Generación -->
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="text-lg font-semibold text-text-main dark:text-white">Egresados por Generación</h4>
+                <span class="material-symbols-outlined text-primary text-2xl">timeline</span>
+            </div>
+            <div class="h-56 md:h-64">
+                <canvas id="chartGeneraciones"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart: Distribución por Carrera -->
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="text-lg font-semibold text-text-main dark:text-white">Egresados por Carrera</h4>
+                <span class="material-symbols-outlined text-primary text-2xl">pie_chart</span>
+            </div>
+            <div class="h-56 md:h-64">
+                <canvas id="chartCarreras"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart: Distribución por Estatus -->
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="text-lg font-semibold text-text-main dark:text-white">Distribución por Estatus</h4>
+                <span class="material-symbols-outlined text-primary text-2xl">donut_large</span>
+            </div>
+            <div class="h-56 md:h-64">
+                <canvas id="chartEstatus"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart: Crecimiento Acumulado -->
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="text-lg font-semibold text-text-main dark:text-white">Crecimiento Acumulado</h4>
+                <span class="material-symbols-outlined text-primary text-2xl">trending_up</span>
+            </div>
+            <div class="h-56 md:h-64">
+                <canvas id="chartCrecimiento"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+    <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold text-text-main dark:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">bolt</span>
+            Acciones Rápidas
+        </h3>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Action Card 1 -->
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl overflow-hidden shadow-sm border border-card-border dark:border-[#3a252a] hover:shadow-md transition-shadow">
+            <div class="p-6 flex flex-col justify-center gap-4">
+                <div>
+                    <h4 class="text-lg font-bold text-text-main dark:text-white mb-1">Gestionar Egresados</h4>
+                    <p class="text-sm text-text-secondary dark:text-gray-400 leading-relaxed">
+                        Agregar nuevos graduados, editar información existente o actualizar estados.
+                    </p>
+                </div>
+                <a href="/egresados" class="inline-flex items-center justify-center w-fit px-5 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-semibold transition-all shadow-sm group">
+                    Ir al módulo
+                    <span class="material-symbols-outlined ml-2 text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Action Card 2 -->
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl overflow-hidden shadow-sm border border-card-border dark:border-[#3a252a] hover:shadow-md transition-shadow">
+            <div class="p-6 flex flex-col justify-center gap-4">
+                <div>
+                    <h4 class="text-lg font-bold text-text-main dark:text-white mb-1">Actualizar Estadísticas</h4>
+                    <p class="text-sm text-text-secondary dark:text-gray-400 leading-relaxed">
+                        Refrescar los datos del dashboard y generar reportes de rendimiento.
+                    </p>
+                </div>
+                <button onclick="refreshCharts()" class="inline-flex items-center justify-center w-fit px-5 py-2.5 rounded-lg bg-white border border-card-border text-text-main hover:bg-gray-50 dark:bg-transparent dark:border-gray-600 dark:text-white dark:hover:bg-white/5 text-sm font-semibold transition-all shadow-sm group">
+                    Sincronizar Datos
+                    <span class="material-symbols-outlined ml-2 text-lg group-hover:rotate-180 transition-transform duration-500">sync</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/static/js/dashboard.js"></script>
+<script>
+// Cargar estadísticas al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    loadStats();
+    initCharts();
+});
+
+async function loadStats() {
+    try {
+        const response = await fetch('/api/egresados');
+        const data = await response.json();
+        
+        if (data.success) {
+            const egresados = data.data || [];
+            document.getElementById('totalEgresados').textContent = egresados.length;
+            
+            const titulados = egresados.filter(e => e.id_estatus === 3).length;
+            document.getElementById('totalTitulados').textContent = titulados;
+        }
+    } catch (error) {
+        console.error('Error al cargar estadísticas:', error);
+    }
+}
+</script>
+{{end}}

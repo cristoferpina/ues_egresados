@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SIDEUESSJR</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8b233e",
+                        "primary-hover": "#6e1c31",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#1f1316",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .floating-input:focus ~ label,
+        .floating-input:not(:placeholder-shown) ~ label {
+            transform: translateY(-0.75rem) scale(0.85);
+            color: #8b233e;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <!-- Background Decoration -->
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-primary/5 to-transparent"></div>
+        <div class="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-[10%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="w-full max-w-md z-10 animate-fade-in-up">
+        <!-- Card -->
+        <div class="bg-white dark:bg-[#2a1d20] rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-[#3d2e32] overflow-hidden">
+            <!-- Header Section with Brand -->
+            <div class="relative h-32 bg-primary flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 bg-black/20"></div>
+                <div class="absolute inset-0 opacity-30 mix-blend-overlay"></div>
+                <div class="relative z-10 flex flex-col items-center text-white">
+                    <div class="max-w-96 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg mb-2">
+                        <img src="../static/img/logos/umb_all.png" alt="UMB Logo" class="h-auto w-auto object-contain">
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-8 pt-8 pb-10">
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Sistema de Egresados</h1>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wider">UES San José del Ricón</p>
+                </div>
+
+                <form id="loginForm" class="space-y-6" method="POST">
+                    <!-- Username Input -->
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">person</span>
+                        </div>
+                        <input 
+                            class="floating-input block w-full pl-10 pr-3 pt-5 pb-2 border-0 border-b-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-white/5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary placeholder-transparent rounded-t-lg transition-all duration-200 ease-in-out" 
+                            id="usuario" 
+                            name="usuario" 
+                            placeholder="Usuario" 
+                            required 
+                            type="text"
+                        />
+                        <label class="absolute left-10 top-3.5 text-gray-500 dark:text-gray-400 text-sm transition-all duration-200 pointer-events-none origin-left" for="usuario">
+                            Usuario
+                        </label>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">lock</span>
+                        </div>
+                        <input 
+                            class="floating-input block w-full pl-10 pr-10 pt-5 pb-2 border-0 border-b-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-white/5 text-gray-900 dark:text-white focus:ring-0 focus:border-primary placeholder-transparent rounded-t-lg transition-all duration-200 ease-in-out" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Contraseña" 
+                            required 
+                            type="password"
+                        />
+                        <label class="absolute left-10 top-3.5 text-gray-500 dark:text-gray-400 text-sm transition-all duration-200 pointer-events-none origin-left" for="password">
+                            Contraseña
+                        </label>
+                        <button 
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer focus:outline-none" 
+                            type="button"
+                            onclick="togglePassword()"
+                        >
+                            <span class="material-symbols-outlined text-xl" id="toggleIcon">visibility</span>
+                        </button>
+                    </div>
+
+                    <!-- Error Message Area -->
+                    <div id="errorMessage" class="hidden items-center p-3 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+                        <span class="material-symbols-outlined mr-2 text-lg">error</span>
+                        <div>
+                            <span class="font-medium">Error!</span> <span id="errorText"></span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5" 
+                        type="submit"
+                    >
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <span class="material-symbols-outlined text-white/50 group-hover:text-white transition-colors">login</span>
+                        </span>
+                        Iniciar Sesión
+                    </button>
+                </form>
+            </div>
+
+            <!-- Footer inside card -->
+            <div class="bg-gray-50 dark:bg-white/5 px-8 py-4 border-t border-gray-100 dark:border-white/10 flex justify-center items-center gap-2">
+                <span class="material-symbols-outlined text-gray-400 text-lg">help</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 font-medium">Sistema de Gestión Académica</span>
+            </div>
+        </div>
+
+        <!-- Page Footer -->
+        <div class="mt-8 text-center">
+            <p class="text-xs text-gray-400 dark:text-gray-500">
+                © 2026 UES San José del Ricón. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = 'visibility';
+            }
+        }
+    </script>
+    <script src="/static/js/auth.js"></script>
+</body>
+</html>

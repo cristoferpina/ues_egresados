@@ -1,0 +1,389 @@
+{{define "content"}}
+<!-- Page Heading & Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-3xl font-bold text-text-main dark:text-white tracking-tight">Gestión de Egresados</h2>
+        <p class="mt-1 text-sm text-text-secondary dark:text-gray-400">Administra y actualiza la información de los graduados universitarios.</p>
+    </div>
+    <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white text-sm font-semibold h-10 px-5 rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        Nuevo Egresado
+    </button>
+</div>
+
+<!-- VISTA 1: SELECCIÓN DE GENERACIÓN -->
+<div id="vistaGeneraciones" class="visible">
+    <div class="mb-6">
+        <h3 class="text-xl font-bold text-text-main dark:text-white mb-2">Paso 1: Seleccione la Generación</h3>
+        <p class="text-sm text-text-secondary dark:text-gray-400">Elija la generación de egresados que desea consultar</p>
+    </div>
+    
+    <div id="generacionesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <!-- Se llenará dinámicamente -->
+        <div class="text-center py-8 col-span-full">
+            <span class="text-gray-500">Cargando generaciones...</span>
+        </div>
+    </div>
+</div>
+
+<!-- VISTA 2: SELECCIÓN DE CARRERA -->
+<div id="vistaCarreras" class="hidden">
+    <div class="mb-6">
+        <div class="flex items-center gap-3 mb-4">
+            <button onclick="volverAGeneraciones()" class="inline-flex items-center gap-1 text-primary hover:text-primary-hover transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                <span class="text-sm font-medium">Cambiar Generación</span>
+            </button>
+        </div>
+        <h3 class="text-xl font-bold text-text-main dark:text-white mb-2">Paso 2: Seleccione la Carrera</h3>
+        <p class="text-sm text-text-secondary dark:text-gray-400">
+            Generación seleccionada: <span id="generacionSeleccionada" class="font-semibold text-primary"></span>
+        </p>
+    </div>
+    
+    <div id="carrerasGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Se llenará dinámicamente -->
+        <div class="text-center py-8 col-span-full">
+            <span class="text-gray-500">Cargando carreras...</span>
+        </div>
+    </div>
+</div>
+
+<!-- VISTA 3: TABLA DE EGRESADOS -->
+<div id="vistaTabla" class="hidden">
+    <!-- Breadcrumb de navegación -->
+    <div class="mb-6">
+        <div class="flex items-center gap-3 mb-4">
+            <button onclick="volverACarreras()" class="inline-flex items-center gap-1 text-primary hover:text-primary-hover transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                <span class="text-sm font-medium">Cambiar Filtros</span>
+            </button>
+            <button onclick="volverAGeneraciones()" class="inline-flex items-center gap-1 text-secondary hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">restart_alt</span>
+                <span class="text-sm font-medium">Reiniciar</span>
+            </button>
+        </div>
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <h3 class="text-lg font-bold text-text-main dark:text-white mb-2">Filtros Aplicados</h3>
+            <div class="flex flex-wrap gap-2 text-sm">
+                <span class="inline-flex items-center gap-1">
+                    <span class="font-medium text-text-secondary dark:text-gray-400">Generación:</span>
+                    <span id="filtroGeneracion" class="font-semibold text-primary"></span>
+                </span>
+                <span class="text-gray-300 dark:text-gray-600">|</span>
+                <span class="inline-flex items-center gap-1">
+                    <span class="font-medium text-text-secondary dark:text-gray-400">Carrera:</span>
+                    <span id="filtroCarrera" class="font-semibold text-primary"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section adicionales -->
+    <div class="bg-white dark:bg-[#2a1a1e] rounded-xl shadow-sm border border-card-border dark:border-[#3a252a] p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+            <!-- Search -->
+            <div class="md:col-span-5">
+                <label class="block text-xs font-medium text-text-main dark:text-gray-300 mb-1.5">Buscar</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-gray-400 text-[20px]">search</span>
+                    </div>
+                    <input 
+                        id="searchInput"
+                        class="block w-full pl-10 pr-3 py-2.5 border border-card-border dark:border-[#3a252a] rounded-lg leading-5 bg-background-light dark:bg-background-dark text-text-main dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm" 
+                        placeholder="Buscar por matrícula o nombre..." 
+                        type="text"
+                    />
+                </div>
+            </div>
+
+            <!-- Filter: Estatus -->
+            <div class="md:col-span-6">
+                <label class="block text-xs font-medium text-text-main dark:text-gray-300 mb-1.5">Estatus</label>
+                <div class="relative">
+                    <select id="filterEstatus" class="block w-full pl-3 pr-10 py-2.5 text-base border border-card-border dark:border-[#3a252a] focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-lg bg-white dark:bg-background-dark text-text-main dark:text-white appearance-none cursor-pointer">
+                        <option value="">Todos los estatus</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action: Clear Filters -->
+            <div class="md:col-span-1 flex justify-end">
+                <button onclick="clearSearchFilters()" class="w-full md:w-auto h-[42px] flex items-center justify-center text-gray-500 hover:text-primary hover:bg-primary/5 rounded-lg border border-transparent transition-colors" title="Limpiar búsqueda">
+                    <span class="material-symbols-outlined text-[20px]">filter_alt_off</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table Responsive -->
+    <div class="max-w-full mx-auto">
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl overflow-hidden shadow-sm border border-[#edeef2] dark:border-[#3a252a]">
+            <table id="egresadosTableMain" class="w-full">
+                
+                <!-- HEAD - Oculto en móviles -->
+                <thead class="bg-[#e1e8f2] dark:bg-white/5 hidden md:table-header-group">
+                    <tr class="grid md:grid-cols-[0.8fr_2fr_1fr_2fr_1.5fr_1.5fr_1.2fr] px-6">
+                        <th class="py-4 text-left font-medium text-[#141a4e] dark:text-white text-sm">Matrícula</th>
+                        <th class="py-4 text-left font-medium text-[#141a4e] dark:text-white text-sm">Nombre</th>
+                        <th class="py-4 text-left font-medium text-[#141a4e] dark:text-white text-sm">Estatus</th>
+                        <th class="py-4 text-left font-medium text-[#141a4e] dark:text-white text-sm">Carrera</th>
+                        <th class="py-4 text-left font-medium text-[#141a4e] dark:text-white text-sm">Generación</th>
+                        <th class="py-4 text-left font-medium text-[#141a4e] dark:text-white text-sm">Contacto</th>
+                        <th class="py-4 text-right font-medium text-[#141a4e] dark:text-white text-sm">Acciones</th>
+                    </tr>
+                </thead>
+
+                <!-- BODY - Responsive con data-title -->
+                <tbody id="egresadosTable" class="divide-y divide-[#edeef2] dark:divide-[#3a252a]">
+                    <tr class="grid md:grid-cols-[0.8fr_2fr_1fr_2fr_1.5fr_1.5fr_1.2fr] px-6">
+                        <td colspan="7" class="text-center py-8 text-gray-500 col-span-full">Cargando...</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear/editar egresado -->
+<div id="egresadoModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="closeModal()"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white dark:bg-[#2a1a1e] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+            <!-- Modal Header -->
+            <div class="bg-gray-50 dark:bg-white/5 px-4 py-3 sm:px-6 border-b border-gray-200 dark:border-[#3a252a] flex justify-between items-center">
+                <h3 id="modalTitle" class="text-lg leading-6 font-bold text-text-main dark:text-white">
+                    Nuevo Egresado
+                </h3>
+                <button onclick="closeModal()" type="button" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                    <span class="material-symbols-outlined text-2xl">close</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="egresadoForm">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                        
+                        <!-- DATOS PERSONALES -->
+                        <div class="sm:col-span-6">
+                            <h4 class="text-base font-semibold text-primary dark:text-secondary mb-4 pb-2 border-b border-gray-200 dark:border-[#3a252a]">
+                                Datos Personales
+                            </h4>
+                        </div>
+
+                        <!-- Matrícula -->
+                        <div class="sm:col-span-3">
+                            <label for="matricula" class="block text-sm font-medium text-text-main dark:text-gray-200">Matrícula *</label>
+                            <input type="text" id="matricula" maxlength="8" required 
+                                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+
+                        <!-- Nombre Completo -->
+                        <div class="sm:col-span-3">
+                            <label for="nombre_completo" class="block text-sm font-medium text-text-main dark:text-gray-200">Nombre Completo *</label>
+                            <input type="text" id="nombre_completo" required 
+                                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+
+                        <!-- Género -->
+                        <div class="sm:col-span-2">
+                            <label for="genero" class="block text-sm font-medium text-text-main dark:text-gray-200">Género</label>
+                            <select id="genero" 
+                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                <option value="">Seleccione...</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="sm:col-span-2">
+                            <label for="telefono" class="block text-sm font-medium text-text-main dark:text-gray-200">Teléfono</label>
+                            <input type="tel" id="telefono" 
+                                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+
+                        <!-- Correo -->
+                        <div class="sm:col-span-2">
+                            <label for="correo" class="block text-sm font-medium text-text-main dark:text-gray-200">Correo</label>
+                            <input type="email" id="correo" 
+                                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+
+                        <!-- DIRECCIÓN -->
+                        <div class="sm:col-span-6 mt-4">
+                            <h4 class="text-base font-semibold text-primary dark:text-secondary mb-4 pb-2 border-b border-gray-200 dark:border-[#3a252a] flex items-center justify-between">
+                                Dirección
+                                <button type="button" id="toggleSearchMode" 
+                                        class="text-xs font-normal text-secondary hover:text-primary transition-colors px-3 py-1 rounded-md bg-gray-100 dark:bg-white/5">
+                                    🔄 Cambiar método de búsqueda
+                                </button>
+                            </h4>
+                        </div>
+
+                        <!-- MÉTODO 1: BUSCAR POR CP (por defecto) -->
+                        <div id="searchByCP" class="sm:col-span-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                            <!-- Código Postal -->
+                            <div class="sm:col-span-2">
+                                <label for="codigo_postal_search" class="block text-sm font-medium text-text-main dark:text-gray-200">
+                                    Código Postal *
+                                </label>
+                                <input type="text" id="codigo_postal_search" maxlength="5" 
+                                       placeholder="Ej: 50280"
+                                       class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                <p id="cp_error" class="mt-1 text-xs text-red-600 hidden">CP no encontrado</p>
+                            </div>
+
+                            <!-- Estado (readonly cuando se busca por CP) -->
+                            <div class="sm:col-span-2">
+                                <label for="estado_readonly" class="block text-sm font-medium text-text-main dark:text-gray-200">Estado</label>
+                                <input type="text" id="estado_readonly" readonly 
+                                       class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] bg-gray-100 dark:bg-gray-800 dark:text-white shadow-sm sm:text-sm"
+                                       placeholder="Se llenará automáticamente">
+                            </div>
+
+                            <!-- Municipio (readonly cuando se busca por CP) -->
+                            <div class="sm:col-span-2">
+                                <label for="municipio_readonly" class="block text-sm font-medium text-text-main dark:text-gray-200">Municipio</label>
+                                <input type="text" id="municipio_readonly" readonly 
+                                       class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] bg-gray-100 dark:bg-gray-800 dark:text-white shadow-sm sm:text-sm"
+                                       placeholder="Se llenará automáticamente">
+                            </div>
+
+                            <!-- Asentamiento (select) -->
+                            <div class="sm:col-span-6">
+                                <label for="asentamiento_select" class="block text-sm font-medium text-text-main dark:text-gray-200">
+                                    Colonia/Asentamiento *
+                                </label>
+                                <select id="asentamiento_select" 
+                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                    <option value="">Primero ingrese el código postal</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- MÉTODO 2: BUSCAR POR ESTADO/MUNICIPIO (oculto por defecto) -->
+                        <div id="searchByLocation" class="sm:col-span-6 grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6 hidden">
+                            <!-- Estado (select) -->
+                            <div class="sm:col-span-3">
+                                <label for="estado_select" class="block text-sm font-medium text-text-main dark:text-gray-200">
+                                    Estado *
+                                </label>
+                                <select id="estado_select" 
+                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                    <option value="">Cargando estados...</option>
+                                </select>
+                            </div>
+
+                            <!-- Municipio (select) -->
+                            <div class="sm:col-span-3">
+                                <label for="municipio_select" class="block text-sm font-medium text-text-main dark:text-gray-200">
+                                    Municipio *
+                                </label>
+                                <select id="municipio_select" disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                    <option value="">Primero seleccione un estado</option>
+                                </select>
+                            </div>
+
+                            <!-- Asentamiento y CP -->
+                            <div class="sm:col-span-4">
+                                <label for="asentamiento_location_select" class="block text-sm font-medium text-text-main dark:text-gray-200">
+                                    Colonia/Asentamiento *
+                                </label>
+                                <select id="asentamiento_location_select" disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                    <option value="">Primero seleccione un municipio</option>
+                                </select>
+                            </div>
+
+                            <!-- CP generado -->
+                            <div class="sm:col-span-2">
+                                <label for="codigo_postal_generated" class="block text-sm font-medium text-text-main dark:text-gray-200">
+                                    Código Postal
+                                </label>
+                                <input type="text" id="codigo_postal_generated" readonly 
+                                       class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] bg-gray-100 dark:bg-gray-800 dark:text-white shadow-sm sm:text-sm"
+                                       placeholder="Se generará automáticamente">
+                            </div>
+                        </div>
+
+                        <!-- Campos hidden para guardar -->
+                        <input type="hidden" id="codigo_postal" name="codigo_postal">
+                        <input type="hidden" id="estado" name="estado">
+                        <input type="hidden" id="municipio" name="municipio">
+                        <input type="hidden" id="asentamiento" name="asentamiento">
+
+                        <!-- Calle y Número -->
+                        <div class="sm:col-span-4">
+                            <label for="calle" class="block text-sm font-medium text-text-main dark:text-gray-200">Calle</label>
+                            <input type="text" id="calle" 
+                                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="numero" class="block text-sm font-medium text-text-main dark:text-gray-200">Número</label>
+                            <input type="text" id="numero" 
+                                   class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+
+                        <!-- DATOS ACADÉMICOS -->
+                        <div class="sm:col-span-6 mt-4">
+                            <h4 class="text-base font-semibold text-primary dark:text-secondary mb-4 pb-2 border-b border-gray-200 dark:border-[#3a252a]">
+                                Datos Académicos
+                            </h4>
+                        </div>
+
+                        <!-- Carrera -->
+                        <div class="sm:col-span-4">
+                            <label for="id_carrera" class="block text-sm font-medium text-text-main dark:text-gray-200">Carrera *</label>
+                            <select id="id_carrera" required 
+                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></select>
+                        </div>
+
+                        <!-- Generación -->
+                        <div class="sm:col-span-2">
+                            <label for="id_generacion" class="block text-sm font-medium text-text-main dark:text-gray-200">Generación *</label>
+                            <select id="id_generacion" required 
+                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></select>
+                        </div>
+
+                        <!-- Estatus -->
+                        <div class="sm:col-span-6">
+                            <label for="id_estatus" class="block text-sm font-medium text-text-main dark:text-gray-200">Estatus *</label>
+                            <select id="id_estatus" required 
+                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-[#3a252a] dark:bg-background-dark dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="bg-gray-50 dark:bg-white/5 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-200 dark:border-[#3a252a]">
+                    <button type="submit" 
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm">
+                        Guardar
+                    </button>
+                    <button type="button" onclick="closeModal()" 
+                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-[#3a252a] shadow-sm px-4 py-2 bg-white dark:bg-background-dark text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script src="/static/js/egresados.js"></script>
+{{end}}
