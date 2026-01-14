@@ -1021,7 +1021,7 @@ async function descargarExpediente(matricula) {
         // Agregar logos en el encabezado
         try {
             // Logo EdoMex (superior izquierdo)
-            doc.addImage('/static/img/pdf_images/edomex.png', 'PNG', 8, 7, 30, 22);
+            doc.addImage('/static/img/pdf_images/edomex.png', 'PNG', 8, 7, 38, 22);
             
             // Logo UES (superior derecho)
             doc.addImage('/static/img/pdf_images/UES-WHITE.png', 'PNG', 170, 7, 32, 22);
