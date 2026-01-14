@@ -1277,7 +1277,7 @@ async function descargarTablaPDF() {
         }
 
         // Pie de página
-        const pageCount = doc.internal.getPages().length;
+        const pageCount = doc.getNumberOfPages();
         doc.setFontSize(8);
         doc.setTextColor(128, 128, 128);
 
