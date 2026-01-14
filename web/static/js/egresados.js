@@ -1241,7 +1241,11 @@ async function descargarTablaPDF() {
                 }
 
                 xPos = 10;
-                doc.setFillColor(rowIdx % 2 === 0 ? 255, 255, 255 : lightGray[0], lightGray[1], lightGray[2]);
+                if (rowIdx % 2 === 0) {
+                    doc.setFillColor(255, 255, 255);
+                } else {
+                    doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+                }
                 doc.rect(10, yPosition - 5, 277, 7, 'F');
 
                 row.forEach((cell, idx) => {
