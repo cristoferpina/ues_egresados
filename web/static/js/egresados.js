@@ -643,6 +643,11 @@ function renderEgresados(egresados) {
             <!-- Acciones -->
             <td class="py-4 text-right before:content-[attr(data-title)] before:font-semibold before:mr-2 before:text-[#141a4e] md:before:content-none group-hover:before:text-white dark:before:text-gray-300" data-title="Acciones:">
                 <div class="flex gap-2 md:justify-end">
+                    <button onclick="descargarExpediente('${e.matricula}')" 
+                            class="text-blue-600 hover:text-blue-900 group-hover:text-white group-hover:hover:text-white/80 dark:hover:text-blue-400 transition-colors p-2 rounded-lg hover:bg-white/10"
+                            title="Descargar Expediente">
+                        <span class="material-symbols-outlined text-[20px]">download</span>
+                    </button>
                     <button onclick="editEgresado('${e.matricula}')" 
                             class="text-secondary hover:text-primary group-hover:text-white group-hover:hover:text-white/80 transition-colors p-2 rounded-lg hover:bg-white/10"
                             title="Editar">
@@ -978,5 +983,131 @@ async function deleteEgresado(matricula) {
         }
     } catch (error) {
         showNotification('Error al eliminar egresado', 'error');
+    }
+}
+
+// =====================================================
+// DESCARGAR EXPEDIENTE EN PDF
+// =====================================================
+
+async function descargarExpediente(matricula) {
+    try {
+        // Buscar los datos del egresado
+        const egresado = egresadosData.find(e => e.matricula === matricula);
+        
+        if (!egresado) {
+            showNotification('No se encontró el egresado', 'error');
+            return;
+        }
+
+        // Verificar que jsPDF esté disponible
+        if (typeof window.jspdf === 'undefined') {
+            showNotification('Error: Librería PDF no disponible', 'error');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Configuración de colores
+        const primaryColor = [139, 35, 62]; // #8b233e
+        const textColor = [51, 51, 51];
+        const lightGray = [240, 240, 240];
+
+        // Encabezado
+        doc.setFillColor(...primaryColor);
+        doc.rect(0, 0, 210, 35, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(20);
+        doc.setFont('helvetica', 'bold');
+        doc.text('EXPEDIENTE DE EGRESADO', 105, 15, { align: 'center' });
+        
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Sistema de Gestión de Egresados', 105, 23, { align: 'center' });
+        doc.text('UES San José del Ricón', 105, 29, { align: 'center' });
+
+        // Línea decorativa
+        doc.setDrawColor(...primaryColor);
+        doc.setLineWidth(0.5);
+        doc.line(20, 40, 190, 40);
+
+        let yPosition = 50;
+
+        // Función auxiliar para agregar sección
+        const addSection = (title, fields, yPos) => {
+            doc.setFillColor(...lightGray);
+            doc.rect(20, yPos, 170, 8, 'F');
+            doc.setTextColor(...primaryColor);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text(title, 25, yPos + 5.5);
+            
+            yPos += 12;
+            doc.setTextColor(...textColor);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            
+            fields.forEach(field => {
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${field.label}:`, 25, yPos);
+                doc.setFont('helvetica', 'normal');
+                doc.text(field.value || 'N/A', 70, yPos);
+                yPos += 6;
+            });
+            
+            return yPos + 4;
+        };
+
+        // DATOS PERSONALES
+        yPosition = addSection('DATOS PERSONALES', [
+            { label: 'Matrícula', value: egresado.matricula },
+            { label: 'Nombre Completo', value: egresado.nombre_completo },
+            { label: 'Género', value: egresado.genero === 'M' ? 'Masculino' : egresado.genero === 'F' ? 'Femenino' : 'Otro' },
+            { label: 'Fecha de Nacimiento', value: egresado.fecha_nacimiento ? new Date(egresado.fecha_nacimiento).toLocaleDateString('es-MX') : '-' },
+            { label: 'CURP', value: egresado.curp }
+        ], yPosition);
+
+        // DATOS ACADÉMICOS
+        yPosition = addSection('DATOS ACADÉMICOS', [
+            { label: 'Carrera', value: egresado.nombre_carrera },
+            { label: 'Generación', value: egresado.periodo_generacion },
+            { label: 'Fecha de Egreso', value: egresado.fecha_egreso ? new Date(egresado.fecha_egreso).toLocaleDateString('es-MX') : '-' },
+            { label: 'Estatus', value: egresado.nombre_estatus }
+        ], yPosition);
+
+        // DATOS DE CONTACTO
+        yPosition = addSection('DATOS DE CONTACTO', [
+            { label: 'Teléfono', value: egresado.telefono },
+            { label: 'Correo Electrónico', value: egresado.email },
+            { label: 'Estado', value: egresado.estado },
+            { label: 'Municipio', value: egresado.municipio },
+            { label: 'Código Postal', value: egresado.codigo_postal }
+        ], yPosition);
+
+        // OBSERVACIONES
+        if (egresado.observaciones && egresado.observaciones.trim() !== '') {
+            yPosition = addSection('OBSERVACIONES', [
+                { label: '', value: egresado.observaciones }
+            ], yPosition);
+        }
+
+        // Pie de página
+        const pageHeight = doc.internal.pageSize.height;
+        doc.setFontSize(8);
+        doc.setTextColor(128, 128, 128);
+        doc.text(`Generado el: ${new Date().toLocaleString('es-MX')}`, 105, pageHeight - 15, { align: 'center' });
+        doc.text('Sistema de Gestión de Egresados - UES San José del Ricón', 105, pageHeight - 10, { align: 'center' });
+
+        // Descargar el PDF
+        const nombreArchivo = `expediente_${egresado.matricula}_${egresado.nombre_completo.replace(/\s+/g, '_')}.pdf`;
+        doc.save(nombreArchivo);
+        
+        showNotification('Expediente descargado correctamente', 'success');
+        
+    } catch (error) {
+        console.error('Error al generar PDF:', error);
+        showNotification('Error al generar el expediente', 'error');
     }
 }
