@@ -1129,9 +1129,28 @@ async function descargarExpediente(matricula) {
 
 async function descargarTablaPDF() {
     try {
-        // Verificar que jsPDF y autoTable estén disponibles
+        // Verificar que jsPDF esté disponible
         if (typeof window.jspdf === 'undefined') {
             showNotification('Error: Librería PDF no disponible', 'error');
+            return;
+        }
+
+        // Cargar datos filtrados
+        const params = new URLSearchParams();
+        
+        if (filtrosSeleccionados.generacion && filtrosSeleccionados.generacion !== 'all') {
+            params.append('generacion', filtrosSeleccionados.generacion);
+        }
+        
+        if (filtrosSeleccionados.carrera && filtrosSeleccionados.carrera !== 'all') {
+            params.append('carrera', filtrosSeleccionados.carrera);
+        }
+        
+        const dataResponse = await fetchAPI(`/api/egresados/filtrados?${params.toString()}`);
+        const egresadosTableData = dataResponse.data || [];
+
+        if (egresadosTableData.length === 0) {
+            showNotification('No hay datos para descargar', 'warning');
             return;
         }
 
@@ -1166,7 +1185,7 @@ async function descargarTablaPDF() {
         doc.text('Carrera: ' + (filtrosSeleccionados.carreraTexto || 'Todas'), 148.5, 25, { align: 'center' });
 
         // Preparar datos para la tabla
-        const dataTable = egresadosData.map(e => [
+        const dataTable = egresadosTableData.map(e => [
             e.matricula,
             e.nombre_completo,
             e.nombre_estatus || '-',
