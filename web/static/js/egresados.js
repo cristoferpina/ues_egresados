@@ -1018,6 +1018,17 @@ async function descargarExpediente(matricula) {
         doc.setFillColor(...primaryColor);
         doc.rect(0, 0, 210, 35, 'F');
         
+        // Agregar logos en el encabezado
+        try {
+            // Logo UES (superior izquierdo)
+            doc.addImage('/static/img/pdf_images/UES-WHITE.png', 'PNG', 10, 8, 25, 20);
+            
+            // Logo EdoMex (superior derecho)
+            doc.addImage('/static/img/pdf_images/edomex.png', 'PNG', 175, 8, 25, 20);
+        } catch (error) {
+            console.warn('No se pudieron cargar los logos:', error);
+        }
+        
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(20);
         doc.setFont('helvetica', 'bold');
