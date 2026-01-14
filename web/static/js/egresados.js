@@ -1177,8 +1177,8 @@ async function descargarTablaPDF() {
         ]);
 
         // Crear tabla con autoTable (si está disponible) o tabla manual
-        if (typeof window.jspdfAutoTable !== 'undefined') {
-            window.jspdfAutoTable(doc, {
+        if (typeof doc.autoTable === 'function') {
+            doc.autoTable({
                 startY: 35,
                 head: [['Matrícula', 'Nombre', 'Estatus', 'Carrera', 'Generación', 'Email', 'Teléfono']],
                 body: dataTable,
