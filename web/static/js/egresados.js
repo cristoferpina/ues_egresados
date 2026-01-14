@@ -1122,3 +1122,158 @@ async function descargarExpediente(matricula) {
         showNotification('Error al generar el expediente', 'error');
     }
 }
+
+// =====================================================
+// DESCARGAR TABLA EN PDF
+// =====================================================
+
+async function descargarTablaPDF() {
+    try {
+        // Verificar que jsPDF y autoTable estén disponibles
+        if (typeof window.jspdf === 'undefined') {
+            showNotification('Error: Librería PDF no disponible', 'error');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'mm', 'a4'); // 'l' = landscape (horizontal)
+
+        // Configuración de colores
+        const primaryColor = [139, 35, 62];
+        const textColor = [51, 51, 51];
+        const lightGray = [240, 240, 240];
+
+        // Encabezado
+        doc.setFillColor(...primaryColor);
+        doc.rect(0, 0, 297, 30, 'F');
+
+        // Agregar logos
+        try {
+            doc.addImage('/static/img/pdf_images/edomex.png', 'PNG', 10, 5, 35, 20);
+            doc.addImage('/static/img/pdf_images/UES-WHITE.png', 'PNG', 252, 5, 35, 20);
+        } catch (error) {
+            console.warn('No se pudieron cargar los logos:', error);
+        }
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(18);
+        doc.setFont('helvetica', 'bold');
+        doc.text('TABLA DE EGRESADOS', 148.5, 12, { align: 'center' });
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Generación: ' + (filtrosSeleccionados.generacionTexto || 'Todas'), 148.5, 19, { align: 'center' });
+        doc.text('Carrera: ' + (filtrosSeleccionados.carreraTexto || 'Todas'), 148.5, 25, { align: 'center' });
+
+        // Preparar datos para la tabla
+        const dataTable = egresadosData.map(e => [
+            e.matricula,
+            e.nombre_completo,
+            e.nombre_estatus || '-',
+            e.nombre_carrera || '-',
+            e.periodo_generacion || '-',
+            e.email || '-',
+            e.telefono || '-'
+        ]);
+
+        // Crear tabla con autoTable (si está disponible) o tabla manual
+        if (typeof window.jspdfAutoTable !== 'undefined') {
+            window.jspdfAutoTable(doc, {
+                startY: 35,
+                head: [['Matrícula', 'Nombre', 'Estatus', 'Carrera', 'Generación', 'Email', 'Teléfono']],
+                body: dataTable,
+                headStyles: {
+                    fillColor: primaryColor,
+                    textColor: [255, 255, 255],
+                    fontSize: 9,
+                    fontStyle: 'bold',
+                    halign: 'center',
+                    valign: 'middle'
+                },
+                bodyStyles: {
+                    fontSize: 8,
+                    textColor: textColor
+                },
+                alternateRowStyles: {
+                    fillColor: lightGray
+                },
+                margin: { top: 35, right: 10, bottom: 20, left: 10 },
+                columnStyles: {
+                    0: { cellWidth: 25 },
+                    1: { cellWidth: 55 },
+                    2: { cellWidth: 25 },
+                    3: { cellWidth: 55 },
+                    4: { cellWidth: 30 },
+                    5: { cellWidth: 50 },
+                    6: { cellWidth: 30 }
+                }
+            });
+        } else {
+            // Tabla manual sin autoTable
+            let yPosition = 35;
+            const pageHeight = doc.internal.pageSize.height;
+            const columns = ['Matrícula', 'Nombre', 'Estatus', 'Carrera', 'Generación', 'Email', 'Teléfono'];
+            const columnWidths = [25, 55, 25, 55, 30, 50, 30];
+
+            // Encabezados
+            doc.setFillColor(...primaryColor);
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+
+            let xPos = 10;
+            columns.forEach((col, idx) => {
+                doc.text(col, xPos, yPosition, { maxWidth: columnWidths[idx] - 2 });
+                xPos += columnWidths[idx];
+            });
+
+            yPosition += 8;
+
+            // Filas de datos
+            doc.setTextColor(...textColor);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+
+            dataTable.forEach((row, rowIdx) => {
+                if (yPosition > pageHeight - 15) {
+                    doc.addPage();
+                    yPosition = 15;
+                }
+
+                xPos = 10;
+                doc.setFillColor(rowIdx % 2 === 0 ? 255, 255, 255 : lightGray[0], lightGray[1], lightGray[2]);
+                doc.rect(10, yPosition - 5, 277, 7, 'F');
+
+                row.forEach((cell, idx) => {
+                    doc.text(String(cell).substring(0, 20), xPos, yPosition, { maxWidth: columnWidths[idx] - 2 });
+                    xPos += columnWidths[idx];
+                });
+
+                yPosition += 7;
+            });
+        }
+
+        // Pie de página
+        const pageCount = doc.internal.getPages().length;
+        doc.setFontSize(8);
+        doc.setTextColor(128, 128, 128);
+
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            const pageHeight = doc.internal.pageSize.height;
+            doc.text(`Página ${i} de ${pageCount}`, 148.5, pageHeight - 10, { align: 'center' });
+            doc.text(`Generado el: ${new Date().toLocaleString('es-MX')}`, 148.5, pageHeight - 5, { align: 'center' });
+        }
+
+        // Descargar
+        const fecha = new Date().toISOString().split('T')[0];
+        const nombreArchivo = `tabla_egresados_${fecha}.pdf`;
+        doc.save(nombreArchivo);
+
+        showNotification('Tabla descargada correctamente en PDF', 'success');
+
+    } catch (error) {
+        console.error('Error al generar tabla PDF:', error);
+        showNotification('Error al descargar la tabla', 'error');
+    }
+}
