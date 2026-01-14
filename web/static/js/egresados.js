@@ -1020,11 +1020,11 @@ async function descargarExpediente(matricula) {
         
         // Agregar logos en el encabezado
         try {
-            // Logo UES (superior izquierdo)
-            doc.addImage('/static/img/pdf_images/UES-WHITE.png', 'PNG', 10, 8, 25, 20);
+            // Logo EdoMex (superior izquierdo)
+            doc.addImage('/static/img/pdf_images/edomex.png', 'PNG', 8, 7, 30, 22);
             
-            // Logo EdoMex (superior derecho)
-            doc.addImage('/static/img/pdf_images/edomex.png', 'PNG', 175, 8, 25, 20);
+            // Logo UES (superior derecho)
+            doc.addImage('/static/img/pdf_images/UES-WHITE.png', 'PNG', 170, 7, 32, 22);
         } catch (error) {
             console.warn('No se pudieron cargar los logos:', error);
         }
