@@ -36,6 +36,28 @@ const CHART_COLORS = {
 // Instancias de gráficos
 let charts = {};
 
+// Detectar dispositivo móvil
+function isMobileDevice() {
+    return window.innerWidth < 768;
+}
+
+// Configuración responsiva según tamaño de pantalla
+function getResponsiveConfig() {
+    const isMobile = isMobileDevice();
+    return {
+        isMobile,
+        fontSize: isMobile ? 10 : 12,
+        legendFontSize: isMobile ? 10 : 12,
+        legendPadding: isMobile ? 8 : 16,
+        tooltipPadding: isMobile ? 8 : 12,
+        pointRadius: isMobile ? 3 : 5,
+        hoverPointRadius: isMobile ? 5 : 7,
+        borderWidth: isMobile ? 2 : 3,
+        barBorderRadius: isMobile ? 6 : 8,
+        aspectRatio: isMobile ? 1 : 1.4,
+    };
+}
+
 // Paleta dinámica según tema
 function getThemePalette() {
     const isDark = document.documentElement.classList.contains('dark');
@@ -112,6 +134,8 @@ function createChartGeneraciones(data, palette) {
         return colorVariants[i % colorVariants.length];
     });
 
+    const config = getResponsiveConfig();
+    
     charts.generaciones = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -122,7 +146,7 @@ function createChartGeneraciones(data, palette) {
                 backgroundColor: colors,
                 borderColor: colors,
                 borderWidth: 0,
-                borderRadius: 8,
+                borderRadius: config.barBorderRadius,
                 hoverBackgroundColor: CHART_COLORS.danger,
                 hoverBorderColor: CHART_COLORS.danger,
             }]
@@ -130,7 +154,7 @@ function createChartGeneraciones(data, palette) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            aspectRatio: 1.4,
+            aspectRatio: config.aspectRatio,
             plugins: {
                 legend: {
                     display: false,
@@ -139,8 +163,14 @@ function createChartGeneraciones(data, palette) {
                     backgroundColor: palette.tooltipBg,
                     titleColor: palette.tooltipText,
                     bodyColor: palette.tooltipText,
-                    padding: 12,
+                    padding: config.tooltipPadding,
                     cornerRadius: 8,
+                    bodyFont: {
+                        size: config.fontSize
+                    },
+                    titleFont: {
+                        size: config.fontSize
+                    },
                     callbacks: {
                         label: function(context) {
                             return `${context.parsed.y} egresados`;
@@ -154,7 +184,7 @@ function createChartGeneraciones(data, palette) {
                     ticks: {
                         color: palette.text,
                         font: {
-                            size: 12,
+                            size: config.fontSize,
                             weight: '500'
                         }
                     },
@@ -170,9 +200,11 @@ function createChartGeneraciones(data, palette) {
                     ticks: {
                         color: palette.text,
                         font: {
-                            size: 12,
+                            size: config.fontSize,
                             weight: '500'
-                        }
+                        },
+                        maxRotation: config.isMobile ? 45 : 0,
+                        minRotation: config.isMobile ? 45 : 0,
                     },
                     grid: {
                         display: false,
@@ -215,6 +247,8 @@ function createChartCarreras(generacionesData, egresados, palette) {
         CHART_COLORS.danger,
     ];
 
+    const config = getResponsiveConfig();
+    
     charts.carreras = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -234,24 +268,32 @@ function createChartCarreras(generacionesData, egresados, palette) {
             aspectRatio: 1,
             plugins: {
                 legend: {
-                    position: 'bottom',
+                    position: config.isMobile ? 'bottom' : 'bottom',
                     labels: {
                         color: palette.text,
                         font: {
-                            size: 12,
+                            size: config.legendFontSize,
                             weight: '500'
                         },
-                        padding: 16,
+                        padding: config.legendPadding,
                         usePointStyle: true,
                         pointStyle: 'circle',
+                        boxWidth: config.isMobile ? 8 : 10,
+                        boxHeight: config.isMobile ? 8 : 10,
                     }
                 },
                 tooltip: {
                     backgroundColor: palette.tooltipBg,
                     titleColor: palette.tooltipText,
                     bodyColor: palette.tooltipText,
-                    padding: 12,
+                    padding: config.tooltipPadding,
                     cornerRadius: 8,
+                    bodyFont: {
+                        size: config.fontSize
+                    },
+                    titleFont: {
+                        size: config.fontSize
+                    },
                     callbacks: {
                         label: function(context) {
                             const label = context.label || '';
@@ -291,6 +333,8 @@ function createChartEstatus(egresados, palette) {
     const labels = Object.keys(estatus);
     const values = Object.values(estatus);
 
+    const config = getResponsiveConfig();
+    
     charts.estatus = new Chart(ctx, {
         type: 'pie',
         data: {
@@ -318,20 +362,28 @@ function createChartEstatus(egresados, palette) {
                     labels: {
                         color: palette.text,
                         font: {
-                            size: 12,
+                            size: config.legendFontSize,
                             weight: '500'
                         },
-                        padding: 16,
+                        padding: config.legendPadding,
                         usePointStyle: true,
                         pointStyle: 'circle',
+                        boxWidth: config.isMobile ? 8 : 10,
+                        boxHeight: config.isMobile ? 8 : 10,
                     }
                 },
                 tooltip: {
                     backgroundColor: palette.tooltipBg,
                     titleColor: palette.tooltipText,
                     bodyColor: palette.tooltipText,
-                    padding: 12,
+                    padding: config.tooltipPadding,
                     cornerRadius: 8,
+                    bodyFont: {
+                        size: config.fontSize
+                    },
+                    titleFont: {
+                        size: config.fontSize
+                    },
                     callbacks: {
                         label: function(context) {
                             const value = context.parsed;
@@ -366,6 +418,8 @@ function createChartCrecimiento(data, palette) {
         return acumulado;
     });
 
+    const config = getResponsiveConfig();
+    
     charts.crecimiento = new Chart(ctx, {
         type: 'line',
         data: {
@@ -375,39 +429,48 @@ function createChartCrecimiento(data, palette) {
                 data: values,
                 borderColor: CHART_COLORS.primary,
                 backgroundColor: CHART_COLORS.primaryLight,
-                borderWidth: 3,
+                borderWidth: config.borderWidth,
                 fill: true,
                 tension: 0.4,
-                pointRadius: 5,
+                pointRadius: config.pointRadius,
                 pointBackgroundColor: CHART_COLORS.primary,
                 pointBorderColor: palette.border,
                 pointBorderWidth: 2,
-                hoverPointRadius: 7,
+                hoverPointRadius: config.hoverPointRadius,
                 hoverPointBackgroundColor: CHART_COLORS.danger,
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            aspectRatio: 1.4,
+            aspectRatio: config.aspectRatio,
             plugins: {
                 legend: {
                     display: true,
                     labels: {
                         color: palette.text,
                         font: {
-                            size: 12,
+                            size: config.legendFontSize,
                             weight: '500'
                         },
                         usePointStyle: true,
+                        boxWidth: config.isMobile ? 8 : 10,
+                        boxHeight: config.isMobile ? 8 : 10,
+                        padding: config.legendPadding,
                     }
                 },
                 tooltip: {
                     backgroundColor: palette.tooltipBg,
                     titleColor: palette.tooltipText,
                     bodyColor: palette.tooltipText,
-                    padding: 12,
+                    padding: config.tooltipPadding,
                     cornerRadius: 8,
+                    bodyFont: {
+                        size: config.fontSize
+                    },
+                    titleFont: {
+                        size: config.fontSize
+                    },
                     callbacks: {
                         label: function(context) {
                             return `${context.parsed.y} egresados acumulados`;
@@ -421,7 +484,7 @@ function createChartCrecimiento(data, palette) {
                     ticks: {
                         color: palette.text,
                         font: {
-                            size: 12,
+                            size: config.fontSize,
                             weight: '500'
                         }
                     },
@@ -437,9 +500,11 @@ function createChartCrecimiento(data, palette) {
                     ticks: {
                         color: palette.text,
                         font: {
-                            size: 12,
+                            size: config.fontSize,
                             weight: '500'
-                        }
+                        },
+                        maxRotation: config.isMobile ? 45 : 0,
+                        minRotation: config.isMobile ? 45 : 0,
                     },
                     grid: {
                         display: false,
@@ -488,4 +553,20 @@ async function refreshCharts() {
 document.addEventListener('themechange', (e) => {
     console.log('📊 Tema cambió a:', e.detail.theme);
     refreshCharts();
+});
+
+// Escuchar cambios de tamaño de ventana para ajustar gráficos
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        const previousIsMobile = charts.generaciones?.options?.aspectRatio === 1;
+        const currentIsMobile = isMobileDevice();
+        
+        // Solo refrescar si cambió de móvil a desktop o viceversa
+        if (previousIsMobile !== currentIsMobile) {
+            console.log('📱 Cambiando vista a:', currentIsMobile ? 'móvil' : 'desktop');
+            refreshCharts();
+        }
+    }, 250);
 });

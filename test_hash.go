@@ -7,20 +7,20 @@ import (
 
 func main() {
 	// Generar hash
-	password := "1234"
+	password := "gerardosc2026$"
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 	
-	fmt.Println("Hash generado para '1234':")
+	fmt.Println("Hash generado para 'gerardosc2026$':")
 	fmt.Println(string(hash))
 	fmt.Println("\nSQL para actualizar:")
-	fmt.Printf("UPDATE usuarios SET password = '%s' WHERE usuario = 'luis_ramon';\n", string(hash))
+	fmt.Printf("UPDATE usuarios SET password = '%s' WHERE usuario = 'gerardo_moreno';\n", string(hash))
 	
 	// Probar que funciona
-	err = bcrypt.CompareHashAndPassword(hash, []byte("1234"))
+	err = bcrypt.CompareHashAndPassword(hash, []byte("gerardosc2026$"))
 	if err == nil {
 		fmt.Println("\n✅ Hash verificado correctamente")
 	} else {

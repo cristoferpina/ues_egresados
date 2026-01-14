@@ -73,47 +73,47 @@
         Estadísticas y Análisis
     </h3>
     
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <!-- Chart: Egresados por Generación -->
-        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-                <h4 class="text-lg font-semibold text-text-main dark:text-white">Egresados por Generación</h4>
-                <span class="material-symbols-outlined text-primary text-2xl">timeline</span>
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
+            <div class="flex items-center justify-between mb-3 sm:mb-4">
+                <h4 class="text-base sm:text-lg font-semibold text-text-main dark:text-white">Egresados por Generación</h4>
+                <span class="material-symbols-outlined text-primary text-xl sm:text-2xl">timeline</span>
             </div>
-            <div class="h-56 md:h-64">
+            <div class="h-64 sm:h-72 md:h-64">
                 <canvas id="chartGeneraciones"></canvas>
             </div>
         </div>
 
         <!-- Chart: Distribución por Carrera -->
-        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-                <h4 class="text-lg font-semibold text-text-main dark:text-white">Egresados por Carrera</h4>
-                <span class="material-symbols-outlined text-primary text-2xl">pie_chart</span>
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
+            <div class="flex items-center justify-between mb-3 sm:mb-4">
+                <h4 class="text-base sm:text-lg font-semibold text-text-main dark:text-white">Egresados por Carrera</h4>
+                <span class="material-symbols-outlined text-primary text-xl sm:text-2xl">pie_chart</span>
             </div>
-            <div class="h-56 md:h-64">
+            <div class="h-64 sm:h-72 md:h-64">
                 <canvas id="chartCarreras"></canvas>
             </div>
         </div>
 
         <!-- Chart: Distribución por Estatus -->
-        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-                <h4 class="text-lg font-semibold text-text-main dark:text-white">Distribución por Estatus</h4>
-                <span class="material-symbols-outlined text-primary text-2xl">donut_large</span>
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
+            <div class="flex items-center justify-between mb-3 sm:mb-4">
+                <h4 class="text-base sm:text-lg font-semibold text-text-main dark:text-white">Distribución por Estatus</h4>
+                <span class="material-symbols-outlined text-primary text-xl sm:text-2xl">donut_large</span>
             </div>
-            <div class="h-56 md:h-64">
+            <div class="h-64 sm:h-72 md:h-64">
                 <canvas id="chartEstatus"></canvas>
             </div>
         </div>
 
         <!-- Chart: Crecimiento Acumulado -->
-        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-                <h4 class="text-lg font-semibold text-text-main dark:text-white">Crecimiento Acumulado</h4>
-                <span class="material-symbols-outlined text-primary text-2xl">trending_up</span>
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-card-border dark:border-[#3a252a] shadow-sm">
+            <div class="flex items-center justify-between mb-3 sm:mb-4">
+                <h4 class="text-base sm:text-lg font-semibold text-text-main dark:text-white">Crecimiento Acumulado</h4>
+                <span class="material-symbols-outlined text-primary text-xl sm:text-2xl">trending_up</span>
             </div>
-            <div class="h-56 md:h-64">
+            <div class="h-64 sm:h-72 md:h-64">
                 <canvas id="chartCrecimiento"></canvas>
             </div>
         </div>

@@ -22,8 +22,10 @@ func InitDB() error {
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&charset=utf8mb4",
-		dbUser, dbPass, dbHost, dbPort, dbName)
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&charset=utf8mb4&tls=skip-verify",
+	dbUser, dbPass, dbHost, dbPort, dbName,)
+
 
 	var err error
 	DB, err = sql.Open("mysql", dsn)
