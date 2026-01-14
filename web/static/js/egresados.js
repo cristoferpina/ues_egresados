@@ -1188,10 +1188,10 @@ async function descargarTablaPDF() {
         const dataTable = egresadosTableData.map(e => [
             e.matricula,
             e.nombre_completo,
-            e.nombre_estatus || '-',
+            e.descripcion_estatus || '-',
             e.nombre_carrera || '-',
             e.periodo_generacion || '-',
-            e.email || '-',
+            e.correo || '-',
             e.telefono || '-'
         ]);
 
