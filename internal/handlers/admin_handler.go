@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -48,7 +47,7 @@ func GetAdministradores(w http.ResponseWriter, r *http.Request) {
 		administradores = append(administradores, admin)
 	}
 
-	utils.SuccessResponse(w, administradores, "Administradores obtenidos correctamente")
+	utils.SuccessResponse(w, "Administradores obtenidos correctamente", administradores)
 }
 
 // CreateAdministrador crea un nuevo administrador
@@ -111,10 +110,10 @@ func CreateAdministrador(w http.ResponseWriter, r *http.Request) {
 
 	lastID, _ := result.LastInsertId()
 	w.WriteHeader(http.StatusCreated)
-	utils.SuccessResponse(w, map[string]interface{}{
+	utils.SuccessResponse(w, "Administrador creado correctamente", map[string]interface{}{
 		"id_usuario": lastID,
 		"usuario":    req.Usuario,
-	}, "Administrador creado correctamente")
+	})
 }
 
 // UpdateAdministrador actualiza un administrador
@@ -192,7 +191,7 @@ func UpdateAdministrador(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.SuccessResponse(w, nil, "Administrador actualizado correctamente")
+	utils.SuccessResponse(w, "Administrador actualizado correctamente", nil)
 }
 
 // DeleteAdministrador elimina un administrador
@@ -219,5 +218,5 @@ func DeleteAdministrador(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.SuccessResponse(w, nil, "Administrador eliminado correctamente")
+	utils.SuccessResponse(w, "Administrador eliminado correctamente", nil)
 }
