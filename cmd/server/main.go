@@ -46,9 +46,16 @@ func main() {
 
 	protected.HandleFunc("/dashboard", handlers.DashboardPage).Methods("GET")
 	protected.HandleFunc("/egresados", handlers.EgresadosPage).Methods("GET")
+	protected.HandleFunc("/administradores", handlers.AdministradoresPage).Methods("GET")
 
 	// API Routes
 	api := protected.PathPrefix("/api").Subrouter()
+
+	// Administradores
+	api.HandleFunc("/administradores", handlers.GetAdministradores).Methods("GET")
+	api.HandleFunc("/administradores", handlers.CreateAdministrador).Methods("POST")
+	api.HandleFunc("/administradores/{id}", handlers.UpdateAdministrador).Methods("PUT")
+	api.HandleFunc("/administradores/{id}", handlers.DeleteAdministrador).Methods("DELETE")
 
 	// Egresados
 	api.HandleFunc("/egresados", handlers.GetEgresados).Methods("GET")

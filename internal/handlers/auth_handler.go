@@ -139,3 +139,28 @@ func EgresadosPage(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.ExecuteTemplate(w, "base", data)
 }
+
+func AdministradoresPage(w http.ResponseWriter, r *http.Request) {
+	session, _ := config.SessionStore.Get(r, "session-name")
+
+	data := map[string]interface{}{
+		"Title":          "Gestión de Administradores",
+		"Username":       session.Values["username"],
+		"NombreCompleto": session.Values["nombre_completo"],
+	}
+
+	tmpl, err := template.ParseFiles(
+		"web/templates/base.html",
+		"web/templates/administradores.html",
+		"web/templates/components/header.html",
+		"web/templates/components/footer.html",
+	)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	tmpl.ExecuteTemplate(w, "base", data)
+}
+}
