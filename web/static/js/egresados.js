@@ -43,53 +43,36 @@ async function loadGeneracionesStats() {
 }
 
 function renderGeneraciones(statsData) {
-    const grid = document.getElementById('generacionesGrid');
+    const listContainer = document.getElementById('generacionesList');
     const { generaciones, total_general } = statsData;
     
     if (!generaciones || generaciones.length === 0) {
-        grid.innerHTML = `
-            <div class="text-center py-8 col-span-full text-gray-500">
+        listContainer.innerHTML = `
+            <div class="text-center py-8 text-gray-500">
                 No hay generaciones registradas
             </div>
         `;
         return;
     }
     
-    // Tarjeta "Mostrar todas"
-    let html = `
-        <div onclick="seleccionarGeneracion('all', 'Todas las generaciones')" 
-             class="bg-gradient-to-br from-primary to-primary-hover text-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer p-6 transform hover:scale-105">
-            <div class="flex items-center justify-between mb-3">
-                <span class="material-symbols-outlined text-4xl">school</span>
-                <div class="bg-white/20 rounded-full px-3 py-1">
-                    <span class="text-sm font-semibold">${total_general}</span>
-                </div>
-            </div>
-            <h3 class="text-lg font-bold mb-1">Todas</h3>
-            <p class="text-sm text-white/80">Ver todos los egresados</p>
-        </div>
-    `;
-    
-    // Tarjetas de generaciones individuales
+    // Renderizar lista de generaciones
+    let html = '';
     generaciones.forEach(gen => {
         html += `
-            <div onclick="seleccionarGeneracion(${gen.id_generacion}, '${gen.periodo}')" 
-                 class="bg-white dark:bg-[#2a1a1e] rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer p-6 border border-card-border dark:border-[#3a252a] transform hover:scale-105 hover:border-primary">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="material-symbols-outlined text-primary text-3xl">calendar_month</span>
-                    <div class="bg-primary/10 dark:bg-primary/20 rounded-full px-3 py-1">
-                        <span class="text-sm font-semibold text-primary">${gen.total_egresados}</span>
+            <button onclick="seleccionarGeneracion(${gen.id_generacion}, '${gen.periodo}')" class="w-full px-6 py-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left flex items-center justify-between group">
+                <div class="flex items-center gap-3 flex-1">
+                    <span class="material-symbols-outlined text-primary text-2xl">calendar_month</span>
+                    <div>
+                        <p class="font-semibold text-text-main dark:text-white">${gen.periodo}</p>
+                        <p class="text-xs text-text-secondary dark:text-gray-400">${gen.total_egresados} ${gen.total_egresados === 1 ? 'egresado' : 'egresados'}</p>
                     </div>
                 </div>
-                <h3 class="text-lg font-bold text-text-main dark:text-white mb-1">${gen.periodo}</h3>
-                <p class="text-sm text-text-secondary dark:text-gray-400">
-                    ${gen.total_egresados} ${gen.total_egresados === 1 ? 'egresado' : 'egresados'}
-                </p>
-            </div>
+                <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">arrow_forward</span>
+            </button>
         `;
     });
     
-    grid.innerHTML = html;
+    listContainer.innerHTML = html;
 }
 
 function seleccionarGeneracion(idGeneracion, textoGeneracion) {
@@ -99,8 +82,7 @@ function seleccionarGeneracion(idGeneracion, textoGeneracion) {
     // Ocultar vista de generaciones y mostrar vista de carreras
     document.getElementById('vistaGeneraciones').classList.add('hidden');
     document.getElementById('vistaCarreras').classList.remove('hidden');
-    
-    // Actualizar texto de generación seleccionada
+        // Actualizar texto de generación seleccionada
     document.getElementById('generacionSeleccionada').textContent = textoGeneracion;
     
     // Cargar carreras según la generación seleccionada

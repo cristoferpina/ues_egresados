@@ -18,10 +18,27 @@
         <p class="text-sm text-text-secondary dark:text-gray-400">Elija la generación de egresados que desea consultar</p>
     </div>
     
-    <div id="generacionesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <!-- Se llenará dinámicamente -->
-        <div class="text-center py-8 col-span-full">
-            <span class="text-gray-500">Cargando generaciones...</span>
+    <!-- Selector de Generación Compacto -->
+    <div class="max-w-2xl">
+        <div class="bg-white dark:bg-[#2a1a1e] rounded-xl shadow-sm border border-card-border dark:border-[#3a252a] overflow-hidden">
+            <!-- Opción: Todas las generaciones -->
+            <button onclick="seleccionarGeneracion('all', 'Todas las generaciones')" class="w-full px-6 py-4 border-b border-card-border dark:border-[#3a252a] hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left flex items-center justify-between group">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-2xl">school</span>
+                    <div>
+                        <p class="font-semibold text-text-main dark:text-white">Todas las generaciones</p>
+                        <p class="text-xs text-text-secondary dark:text-gray-400">Ver todos los egresados</p>
+                    </div>
+                </div>
+                <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">arrow_forward</span>
+            </button>
+            
+            <!-- Lista de Generaciones -->
+            <div id="generacionesList" class="divide-y divide-card-border dark:divide-[#3a252a] max-h-96 overflow-y-auto">
+                <div class="text-center py-8 col-span-full">
+                    <span class="text-gray-500">Cargando generaciones...</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
