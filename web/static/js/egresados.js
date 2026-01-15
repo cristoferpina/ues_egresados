@@ -1300,3 +1300,110 @@ async function descargarTablaPDF() {
         showNotification('Error al descargar la tabla', 'error');
     }
 }
+
+// =====================================================
+// MODAL DE DESCARGA - SELECCIONAR FORMATO
+// =====================================================
+
+function abrirModalDescargar() {
+    document.getElementById('formatoModal').classList.remove('hidden');
+}
+
+function cerrarModalFormato() {
+    document.getElementById('formatoModal').classList.add('hidden');
+}
+
+// =====================================================
+// DESCARGAR TABLA EN XLSX
+// =====================================================
+
+async function descargarTablaXLSX() {
+    try {
+        // Cargar datos filtrados
+        const params = new URLSearchParams();
+        
+        if (filtrosSeleccionados.generacion && filtrosSeleccionados.generacion !== 'all') {
+            params.append('generacion', filtrosSeleccionados.generacion);
+        }
+        
+        if (filtrosSeleccionados.carrera && filtrosSeleccionados.carrera !== 'all') {
+            params.append('carrera', filtrosSeleccionados.carrera);
+        }
+        
+        const dataResponse = await fetchAPI(`/api/egresados/filtrados?${params.toString()}`);
+        const egresadosTableData = dataResponse.data || [];
+
+        if (egresadosTableData.length === 0) {
+            showNotification('No hay datos para descargar', 'warning');
+            return;
+        }
+
+        // Preparar datos para la hoja
+        const wsData = [];
+        
+        // Agregar encabezado con información de filtros
+        wsData.push(['TABLA DE EGRESADOS']);
+        wsData.push([]);
+        wsData.push(['Generación:', filtrosSeleccionados.generacionTexto || 'Todas']);
+        wsData.push(['Carrera:', filtrosSeleccionados.carreraTexto || 'Todas']);
+        wsData.push(['Fecha de generación:', new Date().toLocaleString('es-MX')]);
+        wsData.push([]);
+        
+        // Agregar encabezados de columnas
+        wsData.push(['Matrícula', 'Nombre Completo', 'Estatus', 'Carrera', 'Generación', 'Email', 'Teléfono']);
+        
+        // Agregar datos
+        egresadosTableData.forEach(e => {
+            wsData.push([
+                e.matricula,
+                e.nombre_completo,
+                e.descripcion_estatus || '-',
+                e.nombre_carrera || '-',
+                e.periodo_generacion || '-',
+                e.correo || '-',
+                e.telefono || '-'
+            ]);
+        });
+
+        // Crear libro de trabajo
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        
+        // Establecer ancho de columnas
+        ws['!cols'] = [
+            { wch: 15 },  // Matrícula
+            { wch: 30 },  // Nombre Completo
+            { wch: 20 },  // Estatus
+            { wch: 30 },  // Carrera
+            { wch: 15 },  // Generación
+            { wch: 30 },  // Email
+            { wch: 15 }   // Teléfono
+        ];
+
+        // Estilo para encabezados (filas 6)
+        const headerRowIndex = 6;
+        for (let i = 0; i < 7; i++) {
+            const cellAddress = XLSX.utils.encode_cell({ r: headerRowIndex - 1, c: i });
+            if (ws[cellAddress]) {
+                ws[cellAddress].s = {
+                    font: { bold: true, color: { rgb: 'FFFFFF' } },
+                    fill: { fgColor: { rgb: '8B233E' } },
+                    alignment: { horizontal: 'center', vertical: 'center' }
+                };
+            }
+        }
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Egresados');
+        
+        // Descargar
+        const fecha = new Date().toISOString().split('T')[0];
+        const nombreArchivo = `tabla_egresados_${fecha}.xlsx`;
+        XLSX.writeFile(wb, nombreArchivo);
+
+        showNotification('Tabla descargada correctamente en Excel', 'success');
+
+    } catch (error) {
+        console.error('Error al generar tabla XLSX:', error);
+        showNotification('Error al descargar la tabla', 'error');
+    }
+}
