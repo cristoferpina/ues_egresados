@@ -14,21 +14,30 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8C233F',
+                        'primary-hover': '#6d1b32',
+                        secondary: '#BF925A',
+                        accent: '#D9B88F',
+                        neutral: '#8C6C5A',
+                        dark: '#0D0D0D',
+                        'background-light': '#FFFFFF',
+                        'background-dark': '#1a0a0e',
+                        'text-main': '#0D0D0D',
+                        'text-secondary': '#6B7280',
+                        'card-border': '#E5E7EB',
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-        :root {
-            --color-primary: #8C233F;
-            --color-primary-hover: #6d1b32;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-        }
-        
-        .dark body {
-            background: linear-gradient(135deg, #0D0D0D 0%, #1a0a0e 100%);
-        }
-        
         .colibri-animation {
             animation: float 3s ease-in-out infinite;
         }
@@ -45,7 +54,7 @@
         .error-code {
             font-size: 120px;
             font-weight: 900;
-            background: linear-gradient(135deg, #8C233F, #D9B88F);
+            background: linear-gradient(135deg, #8C233F, #BF925A);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -57,11 +66,23 @@
         
         .button-hover:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(139, 35, 62, 0.25);
+        }
+
+        .card-dark {
+            background-color: #2a1a1e;
+            border-color: #3a252a;
+        }
+
+        html {
+            color-scheme: light;
+        }
+
+        html.dark {
+            color-scheme: dark;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="bg-white dark:bg-[#1a0a0e] text-text-main dark:text-white min-h-screen flex items-center justify-center p-4">
     <div class="max-w-md w-full text-center">
         <!-- Colibrí flotante -->
         <div class="mb-8">
@@ -72,42 +93,42 @@
         <div class="error-code mb-4">404</div>
         
         <!-- Mensaje -->
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">¡Oops!</h1>
-        <p class="text-gray-600 dark:text-gray-400 text-lg mb-2">
+        <h1 class="text-4xl font-bold text-text-main dark:text-white mb-2">¡Oops!</h1>
+        <p class="text-primary dark:text-secondary text-lg mb-2 font-semibold">
             Página no encontrada
         </p>
-        <p class="text-gray-500 dark:text-gray-500 mb-8">
+        <p class="text-text-secondary dark:text-gray-400 mb-8">
             Parece que el colibrí voló hacia otra dirección. La página que buscas no existe o ha sido movida.
         </p>
         
         <!-- Sugerencias -->
-        <div class="bg-white dark:bg-[#2a1a1e] rounded-lg p-6 mb-8 border border-gray-200 dark:border-[#3a252a]">
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <div class="bg-gray-50 dark:bg-[#2a1a1e] rounded-xl p-6 mb-8 border border-gray-200 dark:border-[#3a252a]">
+            <p class="text-sm text-text-main dark:text-white font-semibold mb-4">
                 ¿Qué puedes hacer?
             </p>
-            <ul class="text-left space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-lg">check</span>
-                    Verifica la URL escrita
+            <ul class="text-left space-y-3 text-sm text-text-secondary dark:text-gray-400">
+                <li class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                    <span>Verifica la URL escrita</span>
                 </li>
-                <li class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-lg">check</span>
-                    Intenta volver al inicio
+                <li class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                    <span>Intenta volver al inicio</span>
                 </li>
-                <li class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-lg">check</span>
-                    Contáctanos si el problema persiste
+                <li class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                    <span>Contáctanos si el problema persiste</span>
                 </li>
             </ul>
         </div>
         
         <!-- Botones de acción -->
         <div class="flex flex-col gap-3">
-            <a href="/" class="button-hover inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+            <a href="/" class="button-hover inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-md">
                 <span class="material-symbols-outlined text-[20px]">home</span>
                 Ir al Inicio
             </a>
-            <button onclick="window.history.back()" class="button-hover inline-flex items-center justify-center gap-2 border border-gray-300 dark:border-[#3a252a] text-gray-700 dark:text-gray-300 font-semibold py-3 px-6 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+            <button onclick="window.history.back()" class="button-hover inline-flex items-center justify-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white dark:border-secondary dark:text-secondary dark:hover:bg-secondary dark:hover:text-text-main font-semibold py-3 px-6 rounded-lg transition-all">
                 <span class="material-symbols-outlined text-[20px]">arrow_back</span>
                 Volver Atrás
             </button>
@@ -115,29 +136,27 @@
         
         <!-- Footer -->
         <div class="mt-8 pt-6 border-t border-gray-200 dark:border-[#3a252a]">
-            <p class="text-xs text-gray-500 dark:text-gray-600">
-                Sistema de Gestión de Egresados © 2026
+            <p class="text-xs text-text-secondary dark:text-gray-500">
+                Sistema de Gestión de Egresados UES © 2026
             </p>
         </div>
     </div>
-    
-    <style>
-        :root {
-            --color-primary: #8C233F;
-            --color-primary-hover: #6d1b32;
+
+    <script>
+        // Detectar y aplicar tema oscuro/claro
+        function initTheme() {
+            const isDark = localStorage.getItem('theme') === 'dark' || 
+                          (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         }
         
-        .bg-primary {
-            background-color: var(--color-primary);
-        }
-        
-        .hover\:bg-primary-hover:hover {
-            background-color: var(--color-primary-hover);
-        }
-        
-        .text-primary {
-            color: var(--color-primary);
-        }
-    </style>
+        initTheme();
+    </script>
 </body>
 </html>
+
