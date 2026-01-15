@@ -80,6 +80,12 @@ func main() {
 	api.HandleFunc("/generaciones", handlers.GetGeneraciones).Methods("GET")
 	api.HandleFunc("/estatus", handlers.GetEstatus).Methods("GET")
 
+	// Rutas públicas sin autenticación
+	r.HandleFunc("/error404", handlers.Error404Handler).Methods("GET")
+
+	// Manejador 404 personalizado
+	r.NotFoundHandler = http.HandlerFunc(handlers.Error404Handler)
+
 	// Iniciar servidor
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {

@@ -68,7 +68,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	session.Values["username"] = usuario.Usuario
 	session.Values["nombre_completo"] = usuario.NombreCompleto()
 	session.Values["rol"] = usuario.Rol
-	
+
 	if err := session.Save(r, w); err != nil {
 		log.Println("❌ Error al guardar sesión:", err)
 		utils.ErrorResponse(w, http.StatusInternalServerError, "Error al crear sesión")
@@ -162,4 +162,15 @@ func AdministradoresPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.ExecuteTemplate(w, "base", data)
+}
+
+// Error404Handler maneja las páginas no encontradas
+func Error404Handler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	tmpl, err := template.ParseFiles("web/templates/error404.html")
+	if err != nil {
+		http.Error(w, "404 - Página no encontrada", http.StatusNotFound)
+		return
+	}
+	tmpl.Execute(w, nil)
 }
