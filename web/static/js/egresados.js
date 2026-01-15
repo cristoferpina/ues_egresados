@@ -1319,6 +1319,12 @@ function cerrarModalFormato() {
 
 async function descargarTablaXLSX() {
     try {
+        // Verificar que XLSX esté disponible
+        if (typeof XLSX === 'undefined') {
+            showNotification('Error: Librería Excel no disponible', 'error');
+            return;
+        }
+
         // Cargar datos filtrados
         const params = new URLSearchParams();
         
