@@ -1,25 +1,4 @@
 {{define "content"}}
-<!-- Modal de Verificación de Contraseña -->
-<div id="passwordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-[#2a1a1e] rounded-xl shadow-xl max-w-md w-full mx-4">
-        <div class="p-6 border-b border-[#edeef2] dark:border-[#3a252a]">
-            <h3 class="text-lg font-semibold text-text-main dark:text-white">Verificación de Seguridad</h3>
-            <p class="text-sm text-text-secondary dark:text-gray-400 mt-1">Ingresa tu contraseña para acceder a esta sección.</p>
-        </div>
-        <form id="passwordForm" onsubmit="verificarContraseña(event)" class="p-6 space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-text-main dark:text-gray-300 mb-2">Contraseña</label>
-                <input type="password" id="passwordInput" name="password" class="w-full px-4 py-2 border border-[#e0e0e0] dark:border-[#3a252a] rounded-lg bg-white dark:bg-[#1a0a0e] text-text-main dark:text-white placeholder-text-secondary dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Ingresa tu contraseña" required>
-                <p id="passwordError" class="text-red-500 text-sm mt-2 hidden"></p>
-            </div>
-            <div class="flex gap-3 justify-end">
-                <button type="button" onclick="salirDeAdmin()" class="px-4 py-2 border border-[#e0e0e0] dark:border-[#3a252a] text-text-main dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors font-medium">Cancelar</button>
-                <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg transition-colors font-medium">Verificar</button>
-            </div>
-        </form>
-    </div>
-</div>
-
 <!-- Page Heading & Actions -->
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
