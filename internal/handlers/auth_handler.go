@@ -163,4 +163,3 @@ func AdministradoresPage(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.ExecuteTemplate(w, "base", data)
 }
-}
