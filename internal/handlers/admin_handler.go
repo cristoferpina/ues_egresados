@@ -220,3 +220,53 @@ func DeleteAdministrador(w http.ResponseWriter, r *http.Request) {
 
 	utils.SuccessResponse(w, "Administrador eliminado correctamente", nil)
 }
+
+// VerifyPassword verifica la contraseña del usuario actual
+func VerifyPassword(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ErrorResponse(w, http.StatusMethodNotAllowed, "Método no permitido")
+		return
+	}
+
+	// Obtener el usuario de la sesión
+	idUsuario := r.Context().Value("userID")
+	if idUsuario == nil {
+		utils.ErrorResponse(w, http.StatusUnauthorized, "Usuario no autenticado")
+		return
+	}
+
+	var req struct {
+		Password string `json:"password"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.ErrorResponse(w, http.StatusBadRequest, "Datos inválidos")
+		return
+	}
+
+	if req.Password == "" {
+		utils.ErrorResponse(w, http.StatusBadRequest, "La contraseña es requerida")
+		return
+	}
+
+	// Obtener la contraseña hasheada del usuario actual
+	var hashedPassword string
+	err := config.DB.QueryRow(
+		"SELECT contrasena FROM usuarios WHERE id_usuario = ?",
+		idUsuario,
+	).Scan(&hashedPassword)
+
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusInternalServerError, "Error al verificar contraseña")
+		return
+	}
+
+	// Comparar contraseña
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(req.Password))
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusUnauthorized, "Contraseña incorrecta")
+		return
+	}
+
+	utils.SuccessResponse(w, "Contraseña verificada correctamente", nil)
+}

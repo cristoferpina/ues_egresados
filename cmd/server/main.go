@@ -56,6 +56,7 @@ func main() {
 	api.HandleFunc("/administradores", handlers.CreateAdministrador).Methods("POST")
 	api.HandleFunc("/administradores/{id}", handlers.UpdateAdministrador).Methods("PUT")
 	api.HandleFunc("/administradores/{id}", handlers.DeleteAdministrador).Methods("DELETE")
+	api.HandleFunc("/verify-password", handlers.VerifyPassword).Methods("POST")
 
 	// Egresados
 	api.HandleFunc("/egresados", handlers.GetEgresados).Methods("GET")

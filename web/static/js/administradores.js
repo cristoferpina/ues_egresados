@@ -4,21 +4,83 @@
 
 let administradoresData = [];
 let adminEnEdicion = null;
+let passwordVerified = false;
 
 // =====================================================
 // INICIALIZAR PÁGINA
 // =====================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    cargarAdministradores();
-    setupFormSubmit();
+    mostrarModalPassword();
 });
+
+// =====================================================
+// VERIFICACIÓN DE CONTRASEÑA
+// =====================================================
+
+function mostrarModalPassword() {
+    document.getElementById('passwordModal').classList.remove('hidden');
+    document.getElementById('passwordInput').focus();
+    passwordVerified = false;
+}
+
+function ocultarModalPassword() {
+    document.getElementById('passwordModal').classList.add('hidden');
+}
+
+async function verificarContraseña(event) {
+    event.preventDefault();
+    
+    const password = document.getElementById('passwordInput').value;
+    const errorElement = document.getElementById('passwordError');
+    
+    errorElement.classList.add('hidden');
+    errorElement.textContent = '';
+    
+    try {
+        const response = await fetch('/api/verify-password', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ password })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            errorElement.textContent = data.message || 'Contraseña incorrecta';
+            errorElement.classList.remove('hidden');
+            return;
+        }
+        
+        // Contraseña correcta
+        passwordVerified = true;
+        ocultarModalPassword();
+        cargarAdministradores();
+        setupFormSubmit();
+    } catch (error) {
+        console.error('Error:', error);
+        errorElement.textContent = 'Error al verificar contraseña';
+        errorElement.classList.remove('hidden');
+    }
+}
+
+function salirDeAdmin() {
+    window.location.href = '/dashboard';
+}
 
 // =====================================================
 // CARGAR ADMINISTRADORES
 // =====================================================
 
 async function cargarAdministradores() {
+    if (!passwordVerified) {
+        mostrarModalPassword();
+        return;
+    }
+    
     try {
         const data = await fetch('/api/administradores', {
             method: 'GET',
