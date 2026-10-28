@@ -1,28 +1,39 @@
 <div align="center">
 
-# 🎓 Gestión de egresados UES
+<sub>CRISTOFER PIÑA · DESARROLLO DE SOFTWARE</sub>
+
+# Gestión de egresados | UMB
 
 Plataforma web para administrar y dar seguimiento a egresados universitarios.
 
-**Go · MySQL · JavaScript**
+<img alt="Go" src="https://img.shields.io/badge/Go-0F172A?style=for-the-badge" />
+<img alt="MySQL" src="https://img.shields.io/badge/MySQL-1D4ED8?style=for-the-badge" />
+<img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-0F766E?style=for-the-badge" />
 
-[Explorar código](https://github.com/cristoferpina/ues_egresados) · [Reportar un problema](https://github.com/cristoferpina/ues_egresados/issues)
+**Universidad Mexiquense del Bicentenario**
+
+[Código fuente](https://github.com/cristoferpina/ues_egresados) &nbsp; / &nbsp; [Incidencias](https://github.com/cristoferpina/ues_egresados/issues) &nbsp; / &nbsp; [Perfil](https://github.com/cristoferpina)
 
 </div>
 
 ---
 
+[Características Principales](#seccion-1) · [Stack Tecnológico](#seccion-2) · [Requisitos](#seccion-3) · [Instalación Local](#seccion-4) · [Credenciales por Defecto](#seccion-5)
+
+---
 
 Sistema web completo para la gestión y seguimiento de egresados universitarios. Desarrollado con Go en el backend, HTML5, CSS3 (Tailwind) y JavaScript en el frontend.
 
-## 🎯 Características Principales
+<a id="seccion-1"></a>
 
-### 📊 Dashboard
+## Características Principales
+
+### Dashboard
 - Estadísticas en tiempo real (Total egresados, Titulados, Carreras, Generaciones)
 - Gráficos interactivos y responsivos
 - Análisis por generación, carrera y estatus
 
-### 👥 Gestión de Egresados
+### Gestión de Egresados
 - CRUD completo (Crear, Leer, Actualizar, Eliminar)
 - Filtros avanzados por generación, carrera y estatus
 - Búsqueda por matrícula o nombre
@@ -30,27 +41,29 @@ Sistema web completo para la gestión y seguimiento de egresados universitarios.
 - Descarga de expedientes en PDF individual
 - Exportación de tabla en PDF (horizontal) y Excel (XLSX)
 
-### 🔐 Administración
+### Administración
 - Gestión de administradores (CRUD)
 - Sistema de autenticación con sesiones
 - Control de acceso por roles
 - Contraseñas hasheadas con bcrypt
 
-### 🎨 Interfaz
+### Interfaz
 - Diseño moderno y responsivo (mobile-first)
 - Tema claro y oscuro automático
 - Animaciones suaves
 - Página de error 404 personalizada con colibrí
 - Favicon personalizado
 
-### 📁 Características Técnicas
+### Características Técnicas
 - Filtros progresivos (Generación → Carrera → Egresados)
 - Búsqueda por código postal
 - Búsqueda por ubicación geográfica
 - Validación de formularios
 - Notificaciones en tiempo real
 
-## 🛠️ Stack Tecnológico
+<a id="seccion-2"></a>
+
+## Stack Tecnológico
 
 ### Backend
 - **Go 1.22** - Lenguaje principal
@@ -71,13 +84,17 @@ Sistema web completo para la gestión y seguimiento de egresados universitarios.
 - **Docker** - Containerización
 - **Fly.io** - Hosting
 
-## 📋 Requisitos
+<a id="seccion-3"></a>
+
+## Requisitos
 
 - Go 1.22 o superior
 - MySQL 8.0 o superior
 - Navegador web moderno (Chrome, Firefox, Safari, Edge)
 
-## 🚀 Instalación Local
+<a id="seccion-4"></a>
+
+## Instalación Local
 
 ### 1. Clonar el repositorio
 ```bash
@@ -116,12 +133,16 @@ go run cmd/server/main.go
 ### 6. Acceder a la aplicación
 Abre tu navegador y ve a: `http://localhost:8080`
 
-## 👤 Credenciales por Defecto
+<a id="seccion-5"></a>
+
+## Credenciales por Defecto
 
 - **Usuario:** `admin`
 - **Contraseña:** `admin123`
 
-## 📁 Estructura del Proyecto
+<a id="seccion-6"></a>
+
+## Estructura del Proyecto
 
 ```
 ues-egresados/
@@ -174,7 +195,9 @@ ues-egresados/
 └── README.md              # Este archivo
 ```
 
-## 🎮 Uso de la Aplicación
+<a id="seccion-7"></a>
+
+## Uso de la Aplicación
 
 ### Login
 1. Ingresa con usuario `admin` y contraseña `admin123`
@@ -205,7 +228,9 @@ ues-egresados/
 - Haz clic en el ícono de sol/luna en el header
 - Se guarda tu preferencia automáticamente
 
-## 🔌 API Endpoints
+<a id="seccion-8"></a>
+
+## API Endpoints
 
 ### Autenticación
 - `POST /login` - Iniciar sesión
@@ -226,7 +251,9 @@ ues-egresados/
 - `PUT /api/administradores/{id}` - Actualizar
 - `DELETE /api/administradores/{id}` - Eliminar
 
-## 🌍 Deployment a Fly.io
+<a id="seccion-9"></a>
+
+## Deployment a Fly.io
 
 ### Prerequisitos
 - Cuenta en Fly.io
@@ -248,7 +275,9 @@ fly secrets set DB_HOST=mysql.host
 fly secrets set SESSION_KEY=clave_segura
 ```
 
-## 📊 Base de Datos
+<a id="seccion-10"></a>
+
+## Base de Datos
 
 ### Tablas principales
 - **usuarios** - Administradores del sistema
@@ -258,7 +287,9 @@ fly secrets set SESSION_KEY=clave_segura
 - **estatus** - Estados (Titulado, En proceso, etc.)
 - **codigos_postales** - Códigos postales para búsqueda
 
-## 🐛 Troubleshooting
+<a id="seccion-11"></a>
+
+## Troubleshooting
 
 ### La página 404 no aparece
 - Asegúrate que la imagen del colibrí esté en `web/static/img/logos/colibri.png`
@@ -277,30 +308,27 @@ fly secrets set SESSION_KEY=clave_segura
 - Asegúrate que MySQL esté ejecutándose
 - Comprueba que la BD existe
 
-## 📄 Licencia
+<a id="seccion-12"></a>
+
+## Licencia
 
 Este proyecto está bajo licencia privada. Todos los derechos reservados.
 
-## 👨‍💻 Autor
+<a id="seccion-13"></a>
 
-Desarrollado por **Cristófer Piña** para la Universidad de El Salvador.
+## Autor
 
-## 🔗 Enlaces
+Desarrollado por **Cristófer Piña** para la Universidad Mexiquense del Bicentenario.
+
+<a id="seccion-14"></a>
+
+## Enlaces
 
 - **Repositorio:** https://github.com/cristoferpina/ues_egresados
 - **Aplicación en vivo:** https://ues-egresados.fly.dev/
 
 ---
 
-**Última actualización:** 14 de enero de 2026 ✨
-
-│   └── utils/          # Utilidades
-└── web/                # Frontend
-    ├── static/         # CSS, JS
-    └── templates/      # HTML
-```
-
-## 📝 Licencia
-
-Proyecto educativo - UES
-```
+<div align="center">
+<sub>Desarrollado por <a href="https://github.com/cristoferpina">Cristofer Piña</a> · Universidad Mexiquense del Bicentenario</sub>
+</div>
