@@ -1,44 +1,17 @@
-# Sistema de Gestión de Egresados - UES
+<div align="center">
 
-Sistema web para la gestión y seguimiento de egresados universitarios desarrollado en Go.
+# 🎓 Gestión de egresados UES
 
-## 🚀 Características
+Plataforma web para administrar y dar seguimiento a egresados universitarios.
 
-- Gestión completa de egresados (CRUD)
-- Autenticación de usuarios
-- Dashboard con estadísticas
-- Filtros y búsquedas avanzadas
-- Interfaz responsive
+**Go · MySQL · JavaScript**
 
-## 📋 Requisitos
+[Explorar código](https://github.com/cristoferpina/ues_egresados) · [Reportar un problema](https://github.com/cristoferpina/ues_egresados/issues)
 
-- Go 1.21 o superior
-- MySQL 8.0 o superior
-- Navegador web moderno
+</div>
 
-## 🔧 Instalación
+---
 
-1. Clonar el repositorio
-2. Configurar archivo `.env` con credenciales de la BD
-3. Importar el script SQL en phpMyAdmin
-4. Instalar dependencias:
-```bash
-go mod download
-```
-
-5. Ejecutar el servidor:
-```bash
-go run cmd/server/main.go
-```
-
-6. Abrir en navegador: `http://localhost:8080`
-
-## 👤 Usuario por defecto
-
-- Usuario: `admin`
-- Contraseña: `admin123`
-
-# Sistema de Gestión de Egresados - UES
 
 Sistema web completo para la gestión y seguimiento de egresados universitarios. Desarrollado con Go en el backend, HTML5, CSS3 (Tailwind) y JavaScript en el frontend.
 
