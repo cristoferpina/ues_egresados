@@ -4,7 +4,9 @@
 
 # Gestión de egresados | UMB
 
-Plataforma web para administrar y dar seguimiento a egresados universitarios.
+**Del registro al seguimiento de egresados.**
+
+Aplicación web que reúne gestión de egresados, consultas y estadísticas en un mismo flujo de trabajo.
 
 <img alt="Go" src="https://img.shields.io/badge/Go-0F172A?style=for-the-badge" />
 <img alt="MySQL" src="https://img.shields.io/badge/MySQL-1D4ED8?style=for-the-badge" />
@@ -15,6 +17,17 @@ Plataforma web para administrar y dar seguimiento a egresados universitarios.
 [Código fuente](https://github.com/cristoferpina/ues_egresados) &nbsp; / &nbsp; [Incidencias](https://github.com/cristoferpina/ues_egresados/issues) &nbsp; / &nbsp; [Perfil](https://github.com/cristoferpina)
 
 </div>
+
+## Una mirada al proyecto
+
+| Qué encontrarás | Por qué explorarlo |
+| --- | --- |
+| Del registro al seguimiento de egresados. | Aplicación web que reúne gestión de egresados, consultas y estadísticas en un mismo flujo de trabajo. |
+| Trabajo de desarrollo | Backend en Go, autenticación, consultas a MySQL y herramientas de exportación de información. |
+
+**[Explora la lógica de la aplicación →](internal/)**
+
+
 
 ---
 
